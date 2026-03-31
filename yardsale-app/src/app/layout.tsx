@@ -1,7 +1,7 @@
 import "./globals.css";
 import ToastProvider from "@/app/toast-provider";
 import Navbar from "./components/Navbar";
-
+import { Providers } from "./components/Providers";
 export default function RootLayout({
   children,
 }: {
@@ -10,9 +10,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
-        <ToastProvider />
+        <Providers>
+          <Navbar />
+          {children}
+          <ToastProvider />
+        </Providers>
       </body>
     </html>
   );

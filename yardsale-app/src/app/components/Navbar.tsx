@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSession, signOut, signIn } from "next-auth/react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <nav className="border-b bg-white sticky top-0 z-50">
@@ -24,9 +26,21 @@ export default function Navbar() {
               Sell
             </Link>
 
-            <button className="bg-black text-white px-4 py-2 rounded-lg">
-              Login
-            </button>
+            {session ? (
+              <button
+                onClick={() => signOut()}
+                className="bg-black text-white px-4 py-2 rounded-lg"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => signIn("google")}
+                className="bg-black text-white px-4 py-2 rounded-lg"
+              >
+                Login
+              </button>
+            )}
           </div>
 
           {/* Mobile Button */}
