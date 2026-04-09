@@ -25,6 +25,10 @@ export async function POST(req: Request) {
   const title = typeof body.title === "string" ? body.title.trim() : "";
   const description = typeof body.description === "string" ? body.description.trim() : "";
   const price = Number(body.price);
+  const imageUrl =
+    typeof body.imageUrl === "string" && body.imageUrl.trim()
+      ? body.imageUrl
+      : null;
 
   if (!title || !description || !Number.isFinite(price)) {
     return NextResponse.json({ error: "Invalid listing data" }, { status: 400 });
@@ -44,6 +48,7 @@ export async function POST(req: Request) {
       title,
       description,
       price,
+      imageUrl,
       userId: user.id,
     },
   });
