@@ -71,21 +71,24 @@ export default function LoginPage() {
               required
             />
 
-            <button className="w-full rounded-2xl bg-[#1877f2] py-3 font-semibold text-white shadow-sm">
+            <button className="w-full rounded-2xl bg-[#1877f2] py-3 font-semibold text-white shadow-sm cursor-pointer">
               {loading ? "Loading..." : "Login"}
             </button>
           </form>
 
           <button
             onClick={() => signIn("google")}
-            className="mt-3 w-full rounded-2xl border border-slate-200 py-3 font-medium text-slate-700"
+            className="mt-3 w-full rounded-2xl border border-slate-200 py-3 font-medium text-slate-700 cursor-pointer"
           >
             Continue with Google
           </button>
 
           <p className="mt-4 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-semibold text-[#1877f2]">
+            <Link
+              href="/signup"
+              className="font-semibold text-[#1877f2] cursor-pointer"
+            >
               Sign up
             </Link>
           </p>
