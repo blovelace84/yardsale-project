@@ -29,14 +29,63 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const message = await db.message.create({
-    data: {
-      content,
-      senderId: sender.id,
-      receiverId,
-      listingId,
-    },
-  });
+  if (sender.id === receiverId) {
+    return NextResponse.json(
+      { error: "You cannot message yourself about your own listing" },
+      { status: 400 }
+    );
+  }
 
-  return NextResponse.json(message);
+  const [receiver, listing] = await Promise.all([
+    db.user.findUnique({
+      where: { id: receiverId },
+      select: { id: true },
+    }),
+    db.listing.findUnique({
+      where: { id: listingId },
+      select: { id: true, userId: true },
+    }),
+  ]);
+
+  if (!receiver) {
+    return NextResponse.json({ error: "Seller not found" }, { status: 404 });
+  }
+
+  if (!listing) {
+    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+  }
+
+  if (listing.userId !== receiverId) {
+    return NextResponse.json(
+      { error: "Listing seller mismatch" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const message = await db.message.create({
+      data: {
+        content,
+        senderId: sender.id,
+        receiverId,
+        listingId,
+      },
+    });
+
+    return NextResponse.json(message);
+  } catch (err) {
+    console.error("[POST /api/messages] db.message.create failed:", err);
+    const errorCode =
+      typeof err === "object" && err !== null && "code" in err
+        ? err.code
+        : undefined;
+
+    return NextResponse.json(
+      {
+        error: "Failed to create message",
+        code: errorCode,
+      },
+      { status: 500 }
+    );
+  }
 }

@@ -34,8 +34,15 @@ export default function ContactSeller({
       }),
     });
 
+    const payload = await res.json().catch(() => null);
+
     if (!res.ok) {
-      toast.error("Could not send message");
+      const errorMessage =
+        payload && typeof payload.error === "string"
+          ? payload.error
+          : "Could not send message";
+
+      toast.error(errorMessage);
       return;
     }
 
@@ -64,7 +71,7 @@ export default function ContactSeller({
         onChange={(e) => setMessage(e.target.value)}
       />
       <button
-        className="inline-flex w-full items-center justify-center rounded-xl bg-[#1877f2] px-4 py-3 font-semibold text-white shadow-sm hover:bg-[#1668d4] active:scale-[0.99]"
+        className="inline-flex w-full items-center cursor-pointer justify-center rounded-xl bg-[#1877f2] px-4 py-3 font-semibold text-white shadow-sm hover:bg-[#1668d4] active:scale-[0.99]"
         onClick={handleContact}
       >
         Send Message
