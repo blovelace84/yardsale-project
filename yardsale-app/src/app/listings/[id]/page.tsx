@@ -51,10 +51,10 @@ export default async function ListingPage({
               <img
                 src={listing.imageUrl}
                 alt={listing.title}
-                className="h-[420px] w-full object-cover sm:h-[560px]"
+                className="h-105 w-full object-cover sm:h-140"
               />
             ) : (
-              <div className="flex h-[420px] items-center justify-center text-slate-400 sm:h-[560px]">
+              <div className="flex h-105 items-center justify-center text-slate-400 sm:h-140">
                 No image available
               </div>
             )}
@@ -102,6 +102,8 @@ export default async function ListingPage({
           <ContactSeller
             sellerEmail={listing.user?.email || ""}
             listingTitle={listing.title}
+            sellerId={listing.userId}
+            listingId={listing.id}
           />
         </section>
       </div>

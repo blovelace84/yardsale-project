@@ -6,23 +6,40 @@ import { goeyToast as toast } from "goey-toast";
 export default function ContactSeller({
   sellerEmail,
   listingTitle,
+  sellerId,
+  listingId,
 }: {
   sellerEmail: string;
   listingTitle: string;
+  sellerId: string;
+  listingId: string;
 }) {
   const [message, setMessage] = useState("");
 
-  function handleContact() {
+  async function handleContact() {
     if (!message) {
       toast.error("Please enter a message");
       return;
     }
 
-    // For now: simulate a sending message
-    console.log("Message to:", sellerEmail);
-    console.log("Message:", message);
+    const res = await fetch("/api/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: message,
+        receiverId: sellerId,
+        listingId,
+      }),
+    });
 
-    toast.success("Message sent to seller!");
+    if (!res.ok) {
+      toast.error("Could not send message");
+      return;
+    }
+
+    toast.success("Message sent!");
     setMessage("");
   }
 
@@ -30,8 +47,12 @@ export default function ContactSeller({
     <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div className="space-y-0.5">
-          <h3 className="text-lg font-semibold text-slate-900">Contact seller</h3>
-          <p className="text-sm text-slate-600">Ask if this is still available</p>
+          <h3 className="text-lg font-semibold text-slate-900">
+            Contact seller
+          </h3>
+          <p className="text-sm text-slate-600">
+            Ask if this is still available
+          </p>
         </div>
         <div className="h-10 w-10 rounded-full bg-[#e7f3ff]" />
       </div>
