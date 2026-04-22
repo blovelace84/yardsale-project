@@ -68,3 +68,12 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  receiverId String
+  listingId  String
+  createdAt  DateTime @default(now())
+}
