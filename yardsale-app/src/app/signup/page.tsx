@@ -53,13 +53,13 @@ export default function SignupPage() {
             <input
               name="name"
               placeholder="Name"
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 caret-slate-900 outline-none placeholder:text-slate-400 focus:border-[#1877f2]"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 caret-slate-900 outline-none placeholder:text-slate-400 focus:border-[#1877f2] cursor-pointer"
             />
 
             <input
               name="email"
               placeholder="Email"
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 caret-slate-900 outline-none placeholder:text-slate-400 focus:border-[#1877f2]"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 caret-slate-900 outline-none placeholder:text-slate-400 focus:border-[#1877f2] cursor-pointer"
               required
             />
 
@@ -67,18 +67,21 @@ export default function SignupPage() {
               name="password"
               type="password"
               placeholder="Password"
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 caret-slate-900 outline-none placeholder:text-slate-400 focus:border-[#1877f2]"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 caret-slate-900 outline-none placeholder:text-slate-400 focus:border-[#1877f2] cursor-pointer"
               required
             />
 
-            <button className="w-full rounded-2xl bg-[#1877f2] py-3 font-semibold text-white shadow-sm">
+            <button className="w-full rounded-2xl bg-[#1877f2] py-3 font-semibold text-white shadow-sm cursor-pointer">
               {loading ? "Creating..." : "Sign Up"}
             </button>
           </form>
 
           <p className="mt-4 text-center text-sm text-slate-600">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-[#1877f2]">
+            <Link
+              href="/login"
+              className="font-semibold text-[#1877f2] cursor-pointer"
+            >
               Log in
             </Link>
           </p>
