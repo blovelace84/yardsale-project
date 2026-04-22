@@ -58,13 +58,13 @@ export default function Navbar() {
               <>
                 <button
                   onClick={() => signIn()}
-                  className="rounded-full px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                  className="rounded-full px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 cursor-pointer"
                 >
                   Login
                 </button>
                 <Link
                   href="/signup"
-                  className="rounded-full bg-[#1877f2] px-4 py-2 text-sm font-semibold text-white shadow-sm"
+                  className="rounded-full bg-[#1877f2] px-4 py-2 text-sm font-semibold text-white shadow-sm cursor-pointer"
                 >
                   Sign Up
                 </Link>
@@ -105,7 +105,7 @@ export default function Navbar() {
             {session ? (
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full rounded-xl bg-slate-900 px-4 py-2 text-white"
+                className="w-full rounded-xl bg-slate-900 px-4 py-2 text-white cursor-pointer"
               >
                 Logout
               </button>
@@ -113,13 +113,13 @@ export default function Navbar() {
               <div className="space-y-2 pt-2">
                 <Link
                   href="/login"
-                  className="block w-full rounded-xl border border-slate-200 px-4 py-2 text-center font-medium text-slate-700"
+                  className="block w-full rounded-xl border border-slate-200 px-4 py-2 text-center font-medium text-slate-700 cursor-pointer"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="block w-full rounded-xl bg-[#1877f2] px-4 py-2 text-center font-medium text-white"
+                  className="block w-full rounded-xl bg-[#1877f2] px-4 py-2 text-center font-medium text-white cursor-pointer"
                 >
                   Sign Up
                 </Link>
