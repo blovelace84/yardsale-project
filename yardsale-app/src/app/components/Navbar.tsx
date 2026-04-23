@@ -117,15 +117,45 @@ export default function Navbar() {
 
       {open && (
         <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
-          <div className="mx-auto max-w-7xl space-y-2">
+          <div className="mx-auto max-w-7xl space-y-3">
+            {/* Mobile search */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const trimmedQuery = query.trim();
+                setOpen(false);
+                if (!trimmedQuery) {
+                  router.push("/");
+                  return;
+                }
+                router.push(`/?q=${encodeURIComponent(trimmedQuery)}`);
+              }}
+              className="flex items-center gap-2"
+            >
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search marketplace..."
+                className="w-full rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-black"
+              />
+              <button
+                type="submit"
+                className="rounded-full bg-[#1877f2] px-4 py-2 text-sm font-semibold text-white"
+              >
+                Go
+              </button>
+            </form>
+
             <Link
               href="/"
+              onClick={() => setOpen(false)}
               className="block rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100"
             >
               Home
             </Link>
             <Link
               href="/create"
+              onClick={() => setOpen(false)}
               className="block rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100"
             >
               Sell
@@ -142,12 +172,14 @@ export default function Navbar() {
               <div className="space-y-2 pt-2">
                 <Link
                   href="/login"
+                  onClick={() => setOpen(false)}
                   className="block w-full rounded-xl border border-slate-200 px-4 py-2 text-center font-medium text-slate-700 cursor-pointer"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
+                  onClick={() => setOpen(false)}
                   className="block w-full rounded-xl bg-[#1877f2] px-4 py-2 text-center font-medium text-white cursor-pointer"
                 >
                   Sign Up

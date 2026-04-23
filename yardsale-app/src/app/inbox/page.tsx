@@ -19,17 +19,37 @@ export default async function InboxPage() {
   });
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Inbox</h1>
+    <main className="min-h-screen bg-[#f0f2f5] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-3xl">
+        <h1 className="mb-6 text-2xl font-bold text-slate-900">Inbox</h1>
 
-      {messages.map((msg) => (
-        <div key={msg.id} className="border p-4 rounded mb-3">
-          <p className="text-sm text-gray-500">
-            From: {msg.sender.email}
+        {messages.length === 0 ? (
+          <p className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+            No messages yet.
           </p>
-          <p className="font-medium">{msg.content}</p>
-        </div>
-      ))}
-    </div>
+        ) : (
+          <div className="space-y-3">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
+              >
+                <p className="mb-1 text-xs font-semibold text-slate-500">
+                  From: {msg.sender.email}
+                </p>
+                {msg.listing && (
+                  <p className="mb-2 text-xs text-slate-400">
+                    Re: {msg.listing.title}
+                  </p>
+                )}
+                <p className="text-sm font-medium text-slate-800">
+                  {msg.content}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
