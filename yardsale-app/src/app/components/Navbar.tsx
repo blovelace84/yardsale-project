@@ -106,7 +106,7 @@ export default function Navbar() {
               className="w-full rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-black"
             />
             <button
-              type="submit"dc
+              type="submit"
               className="rounded-full bg-[#1877f2] px-4 py-2 text-sm cursor-pointer font-semibold text-white hover:bg-[#166fe5]"
             >
               Search
