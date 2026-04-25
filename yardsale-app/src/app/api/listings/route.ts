@@ -1,11 +1,20 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { createListingSchema, validateRequestBody } from "@/lib/validation";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 // GET all listings
 export async function GET() {
   const listings = await db.listing.findMany({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      imageUrl: true,
+      createdAt: true,
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -16,40 +25,36 @@ export async function GET() {
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json();
+  const result = await validateRequestBody(req, createListingSchema);
 
-  const title = typeof body.title === "string" ? body.title.trim() : "";
-  const description = typeof body.description === "string" ? body.description.trim() : "";
-  const price = Number(body.price);
+  if (!result.success) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
+  }
+
   const imageUrl =
-    typeof body.imageUrl === "string" && body.imageUrl.trim()
-      ? body.imageUrl
+    typeof result.data.imageUrl === "string" && result.data.imageUrl.length > 0
+      ? result.data.imageUrl
       : null;
 
-  if (!title || !description || !Number.isFinite(price)) {
-    return NextResponse.json({ error: "Invalid listing data" }, { status: 400 });
-  }
-
-  const user = await db.user.findUnique({
-    where: { email: session.user.email },
-    select: { id: true },
-  });
-
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const listing = await db.listing.create({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      imageUrl: true,
+      createdAt: true,
+    },
     data: {
-      title,
-      description,
-      price,
+      title: result.data.title,
+      description: result.data.description,
+      price: result.data.price,
       imageUrl,
-      userId: user.id,
+      userId: session.user.id,
     },
   });
 

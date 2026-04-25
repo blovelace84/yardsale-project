@@ -25,7 +25,20 @@ export default async function ListingPage({
 
   const listing = await db.listing.findUnique({
     where: { id },
-    include: { user: true },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      imageUrl: true,
+      createdAt: true,
+      userId: true,
+      user: {
+        select: {
+          email: true,
+        },
+      },
+    },
   });
 
   if (!listing) return notFound();

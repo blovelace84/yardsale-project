@@ -3,7 +3,7 @@ import { db } from "./db";
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyPassword } from "./password";
+import { hashPassword, verifyPasswordWithMigration } from "./password";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -21,9 +21,10 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials) => {
         if (!credentials?.email || !credentials?.password) return null;
+        const normalizedEmail = credentials.email.trim().toLowerCase();
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: normalizedEmail },
           select: {
             id: true,
             email: true,
@@ -35,8 +36,20 @@ export const authOptions: NextAuthOptions = {
 
         if (!user?.password) return null;
 
-        const isValid = await verifyPassword(credentials.password, user.password);
-        if (!isValid) return null;
+        const verification = await verifyPasswordWithMigration(
+          credentials.password,
+          user.password
+        );
+        if (!verification.isValid) return null;
+
+        if (verification.shouldRehash) {
+          const upgradedHash = await hashPassword(credentials.password);
+
+          await db.user.update({
+            where: { id: user.id },
+            data: { password: upgradedHash },
+          });
+        }
 
         return {
           id: user.id,

@@ -1,35 +1,25 @@
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { createMessageSchema, validateRequestBody } from "@/lib/validation";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json();
-  const content = typeof body.content === "string" ? body.content.trim() : "";
-  const receiverId =
-    typeof body.receiverId === "string" ? body.receiverId.trim() : "";
-  const listingId = typeof body.listingId === "string" ? body.listingId.trim() : "";
+  const result = await validateRequestBody(req, createMessageSchema);
 
-  if (!content || !receiverId || !listingId) {
-    return NextResponse.json({ error: "Invalid message data" }, { status: 400 });
+  if (!result.success) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
   }
 
-  const sender = await db.user.findUnique({
-    where: { email: session.user.email },
-    select: { id: true },
-  });
+  const { content, receiverId, listingId } = result.data;
 
-  if (!sender) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (sender.id === receiverId) {
+  if (session.user.id === receiverId) {
     return NextResponse.json(
       { error: "You cannot message yourself about your own listing" },
       { status: 400 }
@@ -64,9 +54,15 @@ export async function POST(req: Request) {
 
   try {
     const message = await db.message.create({
+      select: {
+        id: true,
+        content: true,
+        listingId: true,
+        createdAt: true,
+      },
       data: {
         content,
-        senderId: sender.id,
+        senderId: session.user.id,
         receiverId,
         listingId,
       },

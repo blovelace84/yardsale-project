@@ -1,20 +1,16 @@
 import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
+import { registerSchema, validateRequestBody } from "@/lib/validation";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const result = await validateRequestBody(req, registerSchema);
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-  const password = typeof body.password === "string" ? body.password : "";
-
-  if (!email || !password) {
-    return NextResponse.json(
-      { error: "Email and password are required" },
-      { status: 400 }
-    );
+  if (!result.success) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
   }
+
+  const { name, email, password } = result.data;
 
   const existingUser = await db.user.findUnique({
     where: { email },

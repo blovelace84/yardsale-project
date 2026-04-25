@@ -11,8 +11,25 @@ if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL is required");
 }
 
+function normalizeSslMode(connectionString: string): string {
+    try {
+        const parsed = new URL(connectionString);
+        const sslMode = parsed.searchParams.get("sslmode");
+
+        if (sslMode === "prefer" || sslMode === "require" || sslMode === "verify-ca") {
+            parsed.searchParams.set("sslmode", "verify-full");
+        }
+
+        return parsed.toString();
+    } catch {
+        return connectionString;
+    }
+}
+
+const normalizedDatabaseUrl = normalizeSslMode(process.env.DATABASE_URL);
+
 const pool = globalForPrisma.pool || new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: normalizedDatabaseUrl,
 });
 
 const adapter = new PrismaPg(pool);

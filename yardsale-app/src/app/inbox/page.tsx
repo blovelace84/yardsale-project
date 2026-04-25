@@ -11,9 +11,20 @@ export default async function InboxPage() {
     where: {
       receiverId: session.user.id,
     },
-    include: {
-      sender: true,
-      listing: true,
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      sender: {
+        select: {
+          email: true,
+        },
+      },
+      listing: {
+        select: {
+          title: true,
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });
