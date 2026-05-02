@@ -29,7 +29,7 @@ function hasValidOrigin(req: NextRequest): boolean {
   }
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   if (!WRITE_METHODS.has(req.method)) {
     return NextResponse.next();
   }
