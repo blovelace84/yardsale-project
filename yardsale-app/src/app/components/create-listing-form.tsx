@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { goeyToast as toast } from "goey-toast";
+import { UploadIcon } from "@animateicons/react/lucide";
 
 export default function CreateListingForm() {
   const router = useRouter();
@@ -107,24 +108,36 @@ export default function CreateListingForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Image Upload */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
-              Photos
-            </label>
+            <label
+              htmlFor="image-upload"
+              className="
+    border-2 border-dashed border-gray-300
+    rounded-2xl
+    p-8
+    flex flex-col items-center justify-center
+    gap-3
+    cursor-pointer
+    hover:border-black
+    hover:bg-gray-50
+    transition
+  "
+            >
+              <UploadIcon size={42} className="text-black" />
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="w-full rounded-xl border border-slate-300 bg-white p-2.5 text-slate-800 file:mr-3 file:rounded-lg file:border-0 file:bg-[#e7f3ff] file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-[#1877f2]"
-            />
+              <div className="text-center">
+                <p className="font-medium">Upload Listing Image</p>
 
-            {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Listing preview"
-                className="mt-3 h-56 w-full rounded-xl object-cover"
+                <p className="text-sm text-gray-500">PNG, JPG up to 4MB</p>
+              </div>
+
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
               />
-            )}
+            </label>
           </div>
 
           {/* Title */}
