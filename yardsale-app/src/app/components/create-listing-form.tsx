@@ -125,7 +125,9 @@ export default function CreateListingForm() {
               <UploadIcon size={42} className="text-black" />
 
               <div className="text-center">
-                <p className="font-medium">Upload Listing Image</p>
+                <p className="font-medium text-blue-700">
+                  Upload Listing Image
+                </p>
 
                 <p className="text-sm text-gray-500">PNG, JPG up to 4MB</p>
               </div>
