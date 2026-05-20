@@ -1,6 +1,7 @@
 import "./globals.css";
 import "goey-toast/styles.css";
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import ToastProvider from "@/app/toast-provider";
 import Navbar from "./components/Navbar";
 import { Providers } from "./components/Providers";
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <Navbar />
+          <Suspense fallback={null}>
+            <Navbar />
+          </Suspense>
           {children}
           <ToastProvider />
         </Providers>

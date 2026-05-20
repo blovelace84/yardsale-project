@@ -1,10 +1,16 @@
 import { db } from "@/lib/db";
 import ItemCard from "./components/item-card";
+import { Metadata } from "next";
 
 type HomeProps = {
   searchParams?: Promise<{
     q?: string;
   }>;
+};
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Browse listings on Yardsale",
 };
 
 export default async function Home({ searchParams }: HomeProps) {
