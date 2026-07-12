@@ -1,7 +1,7 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
-import CreateListing from "../pages/CreateListing";
+import CreateListing from "../pages/CreatListing";
 import Dashboard from "../pages/Dashboard";
 import EditListing from "../pages/EditListing";
 import Favorites from "../pages/Favorites";
@@ -14,22 +14,20 @@ import Signup from "../pages/Signup";
 
 function AppRouter() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/listing/:id" element={<ListingDetails />} />
-          <Route path="/create" element={<CreateListing />} />
-          <Route path="/edit/:id" element={<EditListing />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/listing/:id" element={<ListingDetails />} />
+        <Route path="/create" element={<CreateListing />} />
+        <Route path="/edit/:id" element={<EditListing />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 
