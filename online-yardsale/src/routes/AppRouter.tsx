@@ -9,13 +9,17 @@ import Home from "../pages/Home";
 import ListingDetails from "../pages/ListingDetails";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import Categories from "../pages/Categories";
+import SearchResults from "../pages/SearchResults";
 import Profile from "../pages/Profile";
 import Signup from "../pages/Signup";
 
 function AppRouter() {
   return (
     <Routes>
-      <Route element={<MainLayout />}>
+        <Route element={<MainLayout />}>
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/search" element={<SearchResults />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
