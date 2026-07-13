@@ -5,7 +5,7 @@ import {
   type DocumentReference,
 } from "firebase/firestore";
 
-import { db } from "../firebase/firebaseConfig";
+import { db } from "../firebase/firestore";
 import type { CreateListingData } from "../types/listing";
 
 export async function createListing(

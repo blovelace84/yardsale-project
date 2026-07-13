@@ -5,10 +5,10 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import type { ChangeEvent, ComponentProps } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { auth } from "../firebase/firebaseConfig";
 import { createListing } from "../services/listingServices";
 import {
   uploadListingImages,
@@ -39,7 +39,7 @@ const MAX_IMAGES = 5;
 
 function CreateListing() {
   const navigate = useNavigate();
-
+  const { user, isAuthLoading } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -107,8 +107,6 @@ function CreateListing() {
   const handleSubmit: FormSubmitHandler = async (event) => {
     event.preventDefault();
     setError("");
-
-    const user = auth.currentUser;
 
     if (!user) {
       setError("You must log in before creating a listing.");
@@ -197,7 +195,7 @@ function CreateListing() {
     }
   };
 
-  if (!auth.currentUser) {
+  if (isAuthLoading) {
     return (
       <section className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="text-3xl font-bold text-slate-900">

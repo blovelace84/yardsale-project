@@ -12,10 +12,6 @@ export default defineConfig({
             return;
           }
 
-          if (id.includes("firebase")) {
-            return "firebase";
-          }
-
           if (id.includes("react-router-dom")) {
             return "router";
           }
