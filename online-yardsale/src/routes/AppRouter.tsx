@@ -1,47 +1,62 @@
-import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
-
-const CreateListing = lazy(() => import("../pages/CreatListing"));
-const Dashboard = lazy(() => import("../pages/Dashboard"));
-const EditListing = lazy(() => import("../pages/EditListing"));
-const Favorites = lazy(() => import("../pages/Favorites"));
-const Home = lazy(() => import("../pages/Home"));
-const ListingDetails = lazy(() => import("../pages/ListingDetails"));
-const Login = lazy(() => import("../pages/Login"));
-const NotFound = lazy(() => import("../pages/NotFound"));
-const Categories = lazy(() => import("../pages/Categories"));
-const SearchResults = lazy(() => import("../pages/SearchResults"));
-const Profile = lazy(() => import("../pages/Profile"));
-const Signup = lazy(() => import("../pages/Signup"));
+import Categories from "../pages/Categories";
+import CreateListing from "../pages/CreatListing";
+import Dashboard from "../pages/Dashboard";
+import EditListing from "../pages/EditListing";
+import Favorites from "../pages/Favorites";
+import Home from "../pages/Home";
+import ListingDetails from "../pages/ListingDetails";
+import Login from "../pages/Login";
+import NotFound from "../pages/NotFound";
+import Profile from "../pages/Profile";
+import SearchResults from "../pages/SearchResults";
+import Signup from "../pages/Signup";
+import ProtectedRoute from "./ProtectedRoute";
 
 function AppRouter() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-[40vh] items-center justify-center text-slate-600">
-          Loading...
-        </div>
-      }
-    >
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/search" element={<SearchResults />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/listing/:id" element={<ListingDetails />} />
-          <Route path="/create" element={<CreateListing />} />
-          <Route path="/edit/:id" element={<EditListing />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} />
+    <Routes>
+      <Route element={<MainLayout />}>
+        {/* Public routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/listing/:id"
+          element={<ListingDetails />}
+        />
+
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+          <Route
+            path="/create"
+            element={<CreateListing />}
+          />
+          <Route
+            path="/edit/:id"
+            element={<EditListing />}
+          />
+          <Route
+            path="/favorites"
+            element={<Favorites />}
+          />
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
         </Route>
-      </Routes>
-    </Suspense>
+
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 

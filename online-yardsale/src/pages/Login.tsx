@@ -1,7 +1,13 @@
 import { useState } from "react";
 import type { ComponentProps } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
+import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../services/authServices";
 import { getAuthErrorMessage } from "../utils/firebaseErrors";
 
@@ -9,14 +15,33 @@ type FormSubmitHandler = NonNullable<
   ComponentProps<"form">["onSubmit"]
 >;
 
+interface LoginLocationState {
+  from?: {
+    pathname?: string;
+    search?: string;
+    hash?: string;
+  };
+}
+
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, isAuthLoading } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const locationState =
+    location.state as LoginLocationState | null;
+
+  const redirectPath = locationState?.from
+    ? `${locationState.from.pathname ?? ""}${
+        locationState.from.search ?? ""
+      }${locationState.from.hash ?? ""}`
+    : "/dashboard";
 
   const handleSubmit: FormSubmitHandler = async (event) => {
     event.preventDefault();
@@ -39,13 +64,41 @@ function Login() {
 
       await loginUser(trimmedEmail, password);
 
-      navigate("/dashboard");
-    } catch (error: unknown) {
-      setError(getAuthErrorMessage(error));
+      navigate(redirectPath, {
+        replace: true,
+      });
+    } catch (loginError: unknown) {
+      setError(getAuthErrorMessage(loginError));
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isAuthLoading) {
+    return (
+      <section className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="text-center">
+          <div
+            className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600"
+            aria-hidden="true"
+          />
+
+          <p className="mt-4 text-slate-600">
+            Checking your account...
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (user) {
+    return (
+      <Navigate
+        to={redirectPath}
+        replace
+      />
+    );
+  }
 
   return (
     <section className="mx-auto max-w-md px-4 py-16 sm:px-6">
@@ -62,6 +115,12 @@ function Login() {
           Access your listings, favorites, and account.
         </p>
 
+        {locationState?.from && (
+          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+            Log in to continue to the page you requested.
+          </div>
+        )}
+
         {error && (
           <div
             role="alert"
@@ -71,7 +130,10 @@ function Login() {
           </div>
         )}
 
-        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 space-y-5"
+          onSubmit={handleSubmit}
+        >
           <div>
             <label
               htmlFor="login-email"
@@ -85,7 +147,9 @@ function Login() {
               type="email"
               autoComplete="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
               placeholder="you@example.com"
               required
               disabled={isSubmitting}
@@ -106,7 +170,9 @@ function Login() {
               type="password"
               autoComplete="current-password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
               placeholder="Enter your password"
               required
               disabled={isSubmitting}
@@ -136,6 +202,7 @@ function Login() {
           Don&apos;t have an account?{" "}
           <Link
             to="/signup"
+            state={location.state}
             className="font-semibold text-emerald-700 hover:text-emerald-800"
           >
             Sign up
