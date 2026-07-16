@@ -103,7 +103,7 @@ function ListingCard({
               src={coverImage}
               alt={listing.title}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover transition duration-300 group-hover:scale-105"
+              className="block aspect-[4/3] w-full object-contain transition duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex aspect-[4/3] items-center justify-center text-slate-400">

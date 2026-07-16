@@ -166,7 +166,7 @@ function ListingDetails() {
               <img
                 src={selectedImage}
                 alt={listing.title}
-                className="aspect-[4/3] w-full object-cover"
+                className="block aspect-[4/3] w-full object-contain"
               />
             ) : (
               <div className="flex aspect-[4/3] items-center justify-center text-slate-500">
