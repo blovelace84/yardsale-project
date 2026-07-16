@@ -12,7 +12,7 @@ import {
   type User,
 } from "firebase/auth";
 
-import { auth } from "../firebase/auth";
+import { auth } from "../firebase/firebaseApp";
 
 interface AuthContextValue {
   user: User | null;

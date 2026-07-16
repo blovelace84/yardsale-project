@@ -5,7 +5,7 @@ import {
   type UploadMetadata,
 } from "firebase/storage";
 
-import { storage } from "../firebase/storage";
+import { storage } from "../firebase/firebaseApp";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 

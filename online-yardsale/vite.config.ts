@@ -12,11 +12,39 @@ export default defineConfig({
             return;
           }
 
+          if (
+            id.includes("firebase/auth") ||
+            id.includes("@firebase/auth")
+          ) {
+            return "firebase-auth";
+          }
+
+          if (
+            id.includes("firebase/firestore") ||
+            id.includes("@firebase/firestore")
+          ) {
+            return "firebase-firestore";
+          }
+
+          if (
+            id.includes("firebase/storage") ||
+            id.includes("@firebase/storage")
+          ) {
+            return "firebase-storage";
+          }
+
+          if (id.includes("firebase")) {
+            return "firebase";
+          }
+
           if (id.includes("react-router-dom")) {
             return "router";
           }
 
-          if (id.includes("react") || id.includes("scheduler")) {
+          if (
+            id.includes("react") ||
+            id.includes("scheduler")
+          ) {
             return "react-vendor";
           }
         },

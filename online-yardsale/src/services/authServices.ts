@@ -6,7 +6,7 @@ import {
   type UserCredential,
 } from "firebase/auth";
 
-import { auth } from "../firebase/auth";
+import { auth } from "../firebase/firebaseApp";
 
 export async function createAccount(
   name: string,

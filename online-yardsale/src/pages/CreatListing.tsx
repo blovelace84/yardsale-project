@@ -4,7 +4,12 @@ import {
   MapPin,
   Trash2,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useAuth } from "../context/AuthContext";
 import type { ChangeEvent, ComponentProps } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -51,6 +56,7 @@ function CreateListing() {
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const alertRef = useRef<HTMLDivElement | null>(null);
 
   const previewUrls = useMemo(
     () => images.map((image) => URL.createObjectURL(image)),
@@ -62,6 +68,17 @@ function CreateListing() {
       previewUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [previewUrls]);
+
+  function showError(message: string) {
+    setError(message);
+
+    requestAnimationFrame(() => {
+      alertRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+  }
 
   function handleImageChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -75,7 +92,7 @@ function CreateListing() {
     }
 
     if (images.length + selectedFiles.length > MAX_IMAGES) {
-      setError(`You may upload up to ${MAX_IMAGES} images.`);
+      showError(`You may upload up to ${MAX_IMAGES} images.`);
       event.target.value = "";
       return;
     }
@@ -87,14 +104,33 @@ function CreateListing() {
         ...currentImages,
         ...selectedFiles,
       ]);
-    } catch (imageError) {
-      setError(
-        imageError instanceof Error
-          ? imageError.message
-          : "One or more images could not be added.",
-      );
+    } catch (submissionError: unknown) {
+      console.error("Create listing failed:", submissionError);
+
+      if(
+        typeof submissionError === "object" &&
+        submissionError !== null &&
+        "code" in submissionError
+      ) {
+        const firebaseError = submissionError as {
+          code?: string;
+          message?: string;
+        };
+
+        showError(
+          `${firebaseError.code ?? "Firebase error"}: ${
+            firebaseError.message ?? "The listing could not created."
+          }`,
+        );
+      }else{
+        showError(
+          submissionError instanceof Error
+            ? submissionError.message
+            : "The listing could not created.",
+        );
+      }
     } finally {
-      event.target.value = "";
+      setIsSubmitting(false);
     }
   }
 
@@ -109,7 +145,7 @@ function CreateListing() {
     setError("");
 
     if (!user) {
-      setError("You must log in before creating a listing.");
+      showError("You must log in before creating a listing.");
       return;
     }
 
@@ -119,37 +155,37 @@ function CreateListing() {
     const numericPrice = Number(price);
 
     if (!trimmedTitle) {
-      setError("Enter a title for your listing.");
+      showError("Enter a title for your listing.");
       return;
     }
 
     if (trimmedTitle.length < 3) {
-      setError("The title must contain at least 3 characters.");
+      showError("The title must contain at least 3 characters.");
       return;
     }
 
     if (!trimmedDescription) {
-      setError("Enter a description for your item.");
+      showError("Enter a description for your item.");
       return;
     }
 
     if (!Number.isFinite(numericPrice) || numericPrice < 0) {
-      setError("Enter a valid price.");
+      showError("Enter a valid price.");
       return;
     }
 
     if (!category) {
-      setError("Select a category.");
+      showError("Select a category.");
       return;
     }
 
     if (!trimmedCity) {
-      setError("Enter the city where the item is located.");
+      showError("Enter the city where the item is located.");
       return;
     }
 
     if (images.length === 0) {
-      setError("Add at least one image.");
+      showError("Add at least one image.");
       return;
     }
 
@@ -185,7 +221,7 @@ function CreateListing() {
     } catch (submissionError) {
       console.error("Create listing error:", submissionError);
 
-      setError(
+      showError(
         submissionError instanceof Error
           ? submissionError.message
           : "Your listing could not be created.",
@@ -196,6 +232,18 @@ function CreateListing() {
   };
 
   if (isAuthLoading) {
+    return (
+      <section className="mx-auto max-w-xl px-4 py-20 text-center">
+        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600" />
+
+        <p className="mt-4 text-slate-600">
+          Checking your account...
+        </p>
+      </section>
+    );
+  }
+
+  if (!user) {
     return (
       <section className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="text-3xl font-bold text-slate-900">
@@ -244,6 +292,7 @@ function CreateListing() {
 
       {error && (
         <div
+          ref={alertRef}
           role="alert"
           className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         >
