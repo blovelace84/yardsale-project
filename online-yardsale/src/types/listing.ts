@@ -1,6 +1,13 @@
 import type { Timestamp } from "firebase/firestore";
 
-export type ListingCondition = "NEW" | "USED" | "AS_IS";
+export type ListingCondition =
+  | "NEW"
+  | "USED"
+  | "AS_IS";
+
+export type ListingStatus =
+  | "ACTIVE"
+  | "SOLD";
 
 export interface Listing {
   id: string;
@@ -15,7 +22,7 @@ export interface Listing {
   sellerId: string;
   sellerName: string;
   sellerEmail: string;
-  status: "ACTIVE" | "SOLD";
+  status: ListingStatus;
   createdAt: Timestamp | null;
   updatedAt: Timestamp | null;
 }

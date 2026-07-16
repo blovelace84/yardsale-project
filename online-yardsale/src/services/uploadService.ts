@@ -1,4 +1,5 @@
 import {
+  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
@@ -8,16 +9,25 @@ import {
 import { storage } from "../firebase/firebaseApp";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-const ALLOWED_IMAGE_TYPES = [
+const ALLOWED_IMAGE_TYPES = new Set([
   "image/jpeg",
   "image/png",
   "image/webp",
-];
+]);
 
 export interface UploadedImage {
   url: string;
   path: string;
+}
+
+function createId(): string {
+  if (typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
 }
 
 function sanitizeFileName(fileName: string): string {
@@ -27,19 +37,17 @@ function sanitizeFileName(fileName: string): string {
     .replace(/-+/g, "-");
 }
 
-function createUniqueId(): string {
-  return crypto.randomUUID();
-}
-
 export function validateListingImage(file: File): void {
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
     throw new Error(
-      `${file.name} is not supported. Upload JPG, PNG, or WebP images.`,
+      `${file.name} must be a JPG, PNG, or WebP image.`,
     );
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    throw new Error(`${file.name} is larger than 5 MB.`);
+    throw new Error(
+      `${file.name} must be smaller than 5 MB.`,
+    );
   }
 }
 
@@ -50,13 +58,11 @@ export async function uploadListingImage(
 ): Promise<UploadedImage> {
   validateListingImage(file);
 
-  const safeFileName = sanitizeFileName(file.name);
-  const uniqueFileName = `${createUniqueId()}-${safeFileName}`;
+  const safeName = sanitizeFileName(file.name);
+  const imagePath =
+    `listing-images/${userId}/${listingUploadId}/${createId()}-${safeName}`;
 
-  const path =
-    `listing-images/${userId}/${listingUploadId}/${uniqueFileName}`;
-
-  const imageReference = ref(storage, path);
+  const imageReference = ref(storage, imagePath);
 
   const metadata: UploadMetadata = {
     contentType: file.type,
@@ -71,7 +77,7 @@ export async function uploadListingImage(
 
   return {
     url,
-    path,
+    path: imagePath,
   };
 }
 
@@ -82,7 +88,21 @@ export async function uploadListingImages(
 ): Promise<UploadedImage[]> {
   return Promise.all(
     files.map((file) =>
-      uploadListingImage(file, userId, listingUploadId),
+      uploadListingImage(
+        file,
+        userId,
+        listingUploadId,
+      ),
+    ),
+  );
+}
+
+export async function deleteListingImages(
+  imagePaths: string[],
+): Promise<void> {
+  await Promise.all(
+    imagePaths.map((path) =>
+      deleteObject(ref(storage, path)),
     ),
   );
 }
