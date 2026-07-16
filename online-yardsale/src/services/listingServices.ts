@@ -4,7 +4,11 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  orderBy,
+  query,
   serverTimestamp,
+  where,
   type DocumentReference,
 } from "firebase/firestore";
 
@@ -17,15 +21,27 @@ import type {
 export async function createListing(
   listing: CreateListingData,
 ): Promise<DocumentReference> {
-  return addDoc(
+  return addDoc(collection(firestore, "listings"), {
+    ...listing,
+    status: "ACTIVE",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function getActiveListings(): Promise<Listing[]> {
+  const listingsQuery = query(
     collection(firestore, "listings"),
-    {
-      ...listing,
-      status: "ACTIVE",
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    },
+    where("status", "==", "ACTIVE"),
+    orderBy("createdAt", "desc"),
   );
+
+  const snapshot = await getDocs(listingsQuery);
+
+  return snapshot.docs.map((listingDocument) => ({
+    id: listingDocument.id,
+    ...listingDocument.data(),
+  })) as Listing[];
 }
 
 export async function getListingById(
