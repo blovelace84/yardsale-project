@@ -88,22 +88,20 @@ function formatPostedDate(listing: Listing): string {
 function ListingCard({
   listing,
 }: ListingCardProps) {
-  const coverImage = listing.imageUrls[0] ?? "";
-
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <Link
         to={`/listing/${listing.id}`}
         className="block"
         aria-label={`View ${listing.title}`}
       >
-        <div className="relative overflow-hidden bg-slate-100">
-          {coverImage ? (
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+          {listing.imageUrls?.[0] ? (
             <img
-              src={coverImage}
+              src={listing.imageUrls[0]}
               alt={listing.title}
               loading="lazy"
-              className="block aspect-[4/3] w-full object-contain transition duration-300 group-hover:scale-105"
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex aspect-[4/3] items-center justify-center text-slate-400">

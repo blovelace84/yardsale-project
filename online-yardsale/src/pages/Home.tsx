@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-import ListingCard from "../components/listings/ListingCard";
+import ListingGrid from "../components/listings/ListingGrid";
 import { getActiveListings } from "../services/listingServices";
 import type { Listing } from "../types/listing";
+
 
 function Home() {
   const [listings, setListings] = useState<Listing[]>([]);
@@ -48,7 +48,7 @@ function Home() {
   }, []);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="rounded-3xl bg-emerald-700 px-6 py-16 text-center text-white">
         <p className="font-semibold uppercase tracking-wider text-emerald-200">
           Local marketplace
@@ -70,7 +70,7 @@ function Home() {
         </Link>
       </div>
 
-      <section className="py-12">
+      <section className="py-16">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">
@@ -130,13 +130,10 @@ function Home() {
         )}
 
         {!isLoading && !error && listings.length > 0 && (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {listings.map((listing) => (
-              <ListingCard
-                key={listing.id}
-                listing={listing}
-              />
-            ))}
+          <div className="mt-8">
+            <ListingGrid
+              listings={listings}
+            />
           </div>
         )}
       </section>
