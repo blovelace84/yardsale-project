@@ -1,6 +1,5 @@
 import {
   Heart,
-  ImageOff,
   MapPin,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -100,25 +99,13 @@ function ListingCard({
             <img
               src={listing.imageUrls[0]}
               alt={listing.title}
-              loading="lazy"
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+              className="h-full w-full object-contain p-2"
             />
           ) : (
-            <div className="flex aspect-[4/3] items-center justify-center text-slate-400">
-              <div className="text-center">
-                <ImageOff
-                  size={32}
-                  className="mx-auto"
-                  aria-hidden="true"
-                />
-
-                <p className="mt-2 text-sm">
-                  No image
-                </p>
-              </div>
+            <div className="flex h-full items-center justify-center text-sm text-slate-400">
+              No Image available
             </div>
           )}
-
           {listing.status === "SOLD" && (
             <div className="absolute inset-0 flex items-center justify-center bg-slate-950/55">
               <span className="rounded-full bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-slate-900">
