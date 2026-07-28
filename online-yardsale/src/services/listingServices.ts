@@ -174,6 +174,17 @@ export async function markListingAsActive(
   });
 }
 
+
+export interface UpdateListingInput {
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  condition: string;
+  city: string;
+  imageUrls: string[];
+  imagePaths: string[];
+}
 /**
  * Updates an existing listing.
  */

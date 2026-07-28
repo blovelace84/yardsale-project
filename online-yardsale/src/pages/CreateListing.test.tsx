@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import CreateListing from "./CreatListing";
+import CreateListing from "./CreateListing";
 
 const mockNavigate = vi.fn();
 
@@ -13,9 +13,10 @@ const mockUploadListingImages = vi.fn();
 const mockCreateListing = vi.fn();
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<typeof import("react-router-dom")>(
-    "react-router-dom",
-  );
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>(
+      "react-router-dom",
+    );
 
   return {
     ...actual,
@@ -29,8 +30,7 @@ vi.mock("../context/AuthContext", () => ({
 
 vi.mock("../services/uploadService", () => ({
   validateListingImage: vi.fn(),
-  uploadListingImages: (...args: unknown[]) =>
-    mockUploadListingImages(...args),
+  uploadListingImages: (...args: unknown[]) => mockUploadListingImages(...args),
 }));
 
 vi.mock("../services/listingServices", () => ({
@@ -73,13 +73,11 @@ describe("CreateListing publish flow", () => {
 
     renderCreateListing();
 
-    await user.click(
-      screen.getByRole("button", { name: "Publish listing" }),
-    );
+    await user.click(screen.getByRole("button", { name: "Publish listing" }));
 
-    expect(
-      await screen.findByRole("alert"),
-    ).toHaveTextContent("Enter a title for your listing.");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Enter a title for your listing.",
+    );
 
     expect(mockUploadListingImages).not.toHaveBeenCalled();
     expect(mockCreateListing).not.toHaveBeenCalled();
@@ -90,10 +88,7 @@ describe("CreateListing publish flow", () => {
 
     renderCreateListing();
 
-    await user.type(
-      screen.getByLabelText("Title"),
-      "Solid wood dining table",
-    );
+    await user.type(screen.getByLabelText("Title"), "Solid wood dining table");
 
     await user.type(
       screen.getByLabelText("Description"),
@@ -102,10 +97,7 @@ describe("CreateListing publish flow", () => {
 
     await user.type(screen.getByLabelText("Price"), "150");
 
-    await user.selectOptions(
-      screen.getByLabelText("Category"),
-      "Furniture",
-    );
+    await user.selectOptions(screen.getByLabelText("Category"), "Furniture");
 
     await user.type(screen.getByLabelText("Item location"), "Raleigh, NC");
 
@@ -121,9 +113,7 @@ describe("CreateListing publish flow", () => {
       target: { files: [file] },
     });
 
-    await user.click(
-      screen.getByRole("button", { name: "Publish listing" }),
-    );
+    await user.click(screen.getByRole("button", { name: "Publish listing" }));
 
     await waitFor(() => {
       expect(mockUploadListingImages).toHaveBeenCalledTimes(1);

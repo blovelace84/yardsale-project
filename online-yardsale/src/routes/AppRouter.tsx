@@ -1,24 +1,18 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-const MainLayout = lazy(
-  () => import("../components/layout/MainLayout"),
-);
+const MainLayout = lazy(() => import("../components/layout/MainLayout"));
 const Categories = lazy(() => import("../pages/Categories"));
-const CreateListing = lazy(() => import("../pages/CreatListing"));
+const CreateListing = lazy(() => import("../pages/CreateListing"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const EditListing = lazy(() => import("../pages/EditListing"));
 const Favorites = lazy(() => import("../pages/Favorites"));
 const Home = lazy(() => import("../pages/Home"));
-const ListingDetails = lazy(
-  () => import("../pages/ListingDetails"),
-);
+const ListingDetails = lazy(() => import("../pages/ListingDetails"));
 const Login = lazy(() => import("../pages/Login"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Profile = lazy(() => import("../pages/Profile"));
-const SearchResults = lazy(
-  () => import("../pages/SearchResults"),
-);
+const SearchResults = lazy(() => import("../pages/SearchResults"));
 const Signup = lazy(() => import("../pages/Signup"));
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
 
@@ -46,33 +40,15 @@ function AppRouter() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/listing/:id"
-            element={<ListingDetails />}
-          />
+          <Route path="/listing/:id" element={<ListingDetails />} />
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
-            <Route
-              path="/dashboard"
-              element={<Dashboard />}
-            />
-            <Route
-              path="/create"
-              element={<CreateListing />}
-            />
-            <Route
-              path="/edit/:id"
-              element={<EditListing />}
-            />
-            <Route
-              path="/favorites"
-              element={<Favorites />}
-            />
-            <Route
-              path="/profile"
-              element={<Profile />}
-            />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create" element={<CreateListing />} />
+            <Route path="/edit/:id" element={<EditListing />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
