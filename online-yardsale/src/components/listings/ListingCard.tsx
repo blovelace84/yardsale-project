@@ -1,10 +1,8 @@
-import {
-  Heart,
-  MapPin,
-} from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { Listing } from "../../types/listing";
+import FavoriteButton from "./FavoriteButton";
 
 interface ListingCardProps {
   listing: Listing;
@@ -17,9 +15,7 @@ function formatPrice(price: number): string {
   }).format(price);
 }
 
-function formatCondition(
-  condition: Listing["condition"],
-): string {
+function formatCondition(condition: Listing["condition"]): string {
   switch (condition) {
     case "NEW":
       return "New";
@@ -43,24 +39,17 @@ function formatPostedDate(listing: Listing): string {
   const createdDate = listing.createdAt.toDate();
   const now = new Date();
 
-  const differenceInMilliseconds =
-    now.getTime() - createdDate.getTime();
+  const differenceInMilliseconds = now.getTime() - createdDate.getTime();
 
   if (differenceInMilliseconds < 0) {
     return "Just posted";
   }
 
-  const differenceInMinutes = Math.floor(
-    differenceInMilliseconds / 60_000,
-  );
+  const differenceInMinutes = Math.floor(differenceInMilliseconds / 60_000);
 
-  const differenceInHours = Math.floor(
-    differenceInMinutes / 60,
-  );
+  const differenceInHours = Math.floor(differenceInMinutes / 60);
 
-  const differenceInDays = Math.floor(
-    differenceInHours / 24,
-  );
+  const differenceInDays = Math.floor(differenceInHours / 24);
 
   if (differenceInMinutes < 1) {
     return "Just posted";
@@ -84,9 +73,7 @@ function formatPostedDate(listing: Listing): string {
   });
 }
 
-function ListingCard({
-  listing,
-}: ListingCardProps) {
+function ListingCard({ listing }: ListingCardProps) {
   return (
     <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <Link
@@ -136,30 +123,15 @@ function ListingCard({
                 aria-hidden="true"
               />
 
-              <span className="truncate">
-                {listing.city}
-              </span>
+              <span className="truncate">{listing.city}</span>
             </span>
 
-            <span className="shrink-0">
-              {formatPostedDate(listing)}
-            </span>
+            <span className="shrink-0">{formatPostedDate(listing)}</span>
           </div>
         </div>
       </Link>
 
-      <button
-        type="button"
-        aria-label={`Save ${listing.title} to favorites`}
-        className="absolute right-3 top-3 rounded-full bg-white/95 p-2.5 text-slate-600 shadow-md transition hover:bg-white hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-        onClick={() => {
-          console.log(
-            `Favorite clicked for listing ${listing.id}`,
-          );
-        }}
-      >
-        <Heart size={20} aria-hidden="true" />
-      </button>
+      <FavoriteButton listingId={listing.id} />
     </article>
   );
 }
