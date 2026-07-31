@@ -245,3 +245,24 @@ export async function deleteListingDocument(
 ): Promise<void> {
   await deleteListing(listingId);
 }
+
+export async function getListingsByCategory(
+  category: string,
+): Promise<Listing[]> {
+  const categoryQuery = query(
+    collection(firestore, "listings"),
+    where("category", "==", category),
+    where("status", "==", "ACTIVE"),
+    orderBy("createdAt", "desc"),
+  );
+
+  const snapshot = await getDocs(categoryQuery);
+
+  return snapshot.docs.map(
+    (listingDocument) =>
+      ({
+        id: listingDocument.id,
+        ...listingDocument.data(),
+      }) as Listing,
+  );
+}
