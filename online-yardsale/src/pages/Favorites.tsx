@@ -115,13 +115,23 @@ function Favorites() {
               key={listing.id}
               className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="relative">
-                <Link to={`/listing/${listing.id}`}>
-                  <img
-                    src={listing.imageUrls?.[0] ?? "/placeholder-image.png"}
-                    alt={listing.title}
-                    className="h-52 w-full object-cover"
-                  />
+              <div className="relative aspect-square w-full overflow-hidden bg-slate-100">
+                <Link
+                  to={`/listing/${listing.id}`}
+                  className="block h-full w-full"
+                >
+                  {listing.imageUrls?.[0] ? (
+                    <img
+                      src={listing.imageUrls[0]}
+                      alt={listing.title}
+                      loading="lazy"
+                      className="h-full w-full object-contain p-3"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
+                      No image available
+                    </div>
+                  )}
                 </Link>
 
                 <div className="absolute right-3 top-3">
