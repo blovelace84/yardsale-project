@@ -1,9 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import DashboardListingCard from "../components/listings/DashboardListingCard";
@@ -14,14 +9,16 @@ import {
   markListingAsSold,
 } from "../services/listingServices";
 import type { Listing } from "../types/listing";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function Dashboard() {
   const { user } = useAuth();
 
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [updatingListingId, setUpdatingListingId] =
-    useState<string | null>(null);
+  const [updatingListingId, setUpdatingListingId] = useState<string | null>(
+    null,
+  );
   const [error, setError] = useState("");
 
   const loadListings = useCallback(async () => {
@@ -37,21 +34,13 @@ function Dashboard() {
 
       console.log("Signed-in user UID:", user.uid);
 
-      const sellerListings = await getListingsBySeller(
-        user.uid,
-      );
+      const sellerListings = await getListingsBySeller(user.uid);
 
-      console.log(
-        "Listings returned for dashboard:",
-        sellerListings,
-      );
+      console.log("Listings returned for dashboard:", sellerListings);
 
       setListings(sellerListings);
     } catch (caughtError) {
-      console.error(
-        "Unable to load dashboard listings:",
-        caughtError,
-      );
+      console.error("Unable to load dashboard listings:", caughtError);
 
       setError(
         "We could not load your listings. Check the browser console for more details.",
@@ -81,9 +70,7 @@ function Dashboard() {
     };
   }, [listings]);
 
-  async function handleMarkSold(
-    listingId: string,
-  ): Promise<void> {
+  async function handleMarkSold(listingId: string): Promise<void> {
     try {
       setUpdatingListingId(listingId);
       setError("");
@@ -101,22 +88,15 @@ function Dashboard() {
         ),
       );
     } catch (caughtError) {
-      console.error(
-        "Unable to mark listing as sold:",
-        caughtError,
-      );
+      console.error("Unable to mark listing as sold:", caughtError);
 
-      setError(
-        "The listing could not be marked as sold.",
-      );
+      setError("The listing could not be marked as sold.");
     } finally {
       setUpdatingListingId(null);
     }
   }
 
-  async function handleDelete(
-    listingId: string,
-  ): Promise<void> {
+  async function handleDelete(listingId: string): Promise<void> {
     const shouldDelete = window.confirm(
       "Are you sure you want to delete this listing?",
     );
@@ -132,15 +112,10 @@ function Dashboard() {
       await deleteListing(listingId);
 
       setListings((currentListings) =>
-        currentListings.filter(
-          (listing) => listing.id !== listingId,
-        ),
+        currentListings.filter((listing) => listing.id !== listingId),
       );
     } catch (caughtError) {
-      console.error(
-        "Unable to delete listing:",
-        caughtError,
-      );
+      console.error("Unable to delete listing:", caughtError);
 
       setError("The listing could not be deleted.");
     } finally {
@@ -149,15 +124,7 @@ function Dashboard() {
   }
 
   if (isLoading) {
-    return (
-      <main className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
-          <p className="text-slate-600">
-            Loading your listings...
-          </p>
-        </div>
-      </main>
-    );
+    return <LoadingSpinner fullscreen title="Loading your listings" />;
   }
 
   return (
@@ -173,8 +140,7 @@ function Dashboard() {
           </h1>
 
           <p className="mt-2 text-slate-600">
-            View, edit, mark as sold, or remove the
-            items you posted.
+            View, edit, mark as sold, or remove the items you posted.
           </p>
         </div>
 
@@ -188,9 +154,7 @@ function Dashboard() {
 
       <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">
-            Total listings
-          </p>
+          <p className="text-sm text-slate-500">Total listings</p>
 
           <p className="mt-2 text-3xl font-bold text-slate-900">
             {statistics.total}
@@ -198,9 +162,7 @@ function Dashboard() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">
-            Active
-          </p>
+          <p className="text-sm text-slate-500">Active</p>
 
           <p className="mt-2 text-3xl font-bold text-emerald-700">
             {statistics.active}
@@ -208,9 +170,7 @@ function Dashboard() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">
-            Sold
-          </p>
+          <p className="text-sm text-slate-500">Sold</p>
 
           <p className="mt-2 text-3xl font-bold text-slate-900">
             {statistics.sold}
@@ -234,11 +194,9 @@ function Dashboard() {
           </h2>
 
           <p className="mx-auto mt-2 max-w-lg text-slate-600">
-            No listings were found for the currently
-            signed-in account. Create a new listing while
-            signed in, or confirm that your existing
-            Firestore documents contain the correct
-            sellerId.
+            No listings were found for the currently signed-in account. Create a
+            new listing while signed in, or confirm that your existing Firestore
+            documents contain the correct sellerId.
           </p>
 
           <Link
@@ -251,9 +209,7 @@ function Dashboard() {
       ) : (
         <section className="mt-10">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-bold text-slate-900">
-              Your listings
-            </h2>
+            <h2 className="text-xl font-bold text-slate-900">Your listings</h2>
 
             <button
               type="button"
@@ -269,9 +225,7 @@ function Dashboard() {
               <DashboardListingCard
                 key={listing.id}
                 listing={listing}
-                isUpdating={
-                  updatingListingId === listing.id
-                }
+                isUpdating={updatingListingId === listing.id}
                 onMarkSold={handleMarkSold}
                 onDelete={handleDelete}
               />

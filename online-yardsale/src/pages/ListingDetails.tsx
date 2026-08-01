@@ -1,15 +1,10 @@
-import {
-  ArrowLeft,
-  CalendarDays,
-  MapPin,
-  Tag,
-  UserRound,
-} from "lucide-react";
+import { ArrowLeft, CalendarDays, MapPin, Tag, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { getListingById } from "../services/listingServices";
 import type { Listing } from "../types/listing";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function formatCondition(condition: Listing["condition"]): string {
   switch (condition) {
@@ -107,28 +102,13 @@ function ListingDetails() {
   }, [id]);
 
   if (isLoading) {
-    return (
-      <section className="mx-auto flex min-h-[60vh] max-w-7xl items-center justify-center px-4">
-        <div className="text-center">
-          <div
-            className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600"
-            aria-hidden="true"
-          />
-
-          <p className="mt-4 text-slate-600">
-            Loading listing...
-          </p>
-        </div>
-      </section>
-    );
+    return <LoadingSpinner fullscreen title="Loading listing" />;
   }
 
   if (error || !listing) {
     return (
       <section className="mx-auto max-w-xl px-4 py-20 text-center">
-        <p className="font-semibold text-emerald-700">
-          Listing unavailable
-        </p>
+        <p className="font-semibold text-emerald-700">Listing unavailable</p>
 
         <h1 className="mt-2 text-3xl font-bold text-slate-900">
           We could not display this listing
@@ -258,9 +238,7 @@ function ListingDetails() {
 
             <div className="my-7 border-t border-slate-200" />
 
-            <h2 className="text-lg font-bold text-slate-900">
-              Description
-            </h2>
+            <h2 className="text-lg font-bold text-slate-900">Description</h2>
 
             <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
               {listing.description}
@@ -274,9 +252,7 @@ function ListingDetails() {
               </span>
 
               <div>
-                <p className="text-sm text-slate-500">
-                  Seller
-                </p>
+                <p className="text-sm text-slate-500">Seller</p>
 
                 <p className="font-semibold text-slate-900">
                   {listing.sellerName}

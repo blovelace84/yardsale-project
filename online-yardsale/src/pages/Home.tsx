@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ListingGrid from "../components/listings/ListingGrid";
 import { getActiveListings } from "../services/listingServices";
 import type { Listing } from "../types/listing";
-
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function Home() {
   const [listings, setListings] = useState<Listing[]>([]);
@@ -83,23 +83,7 @@ function Home() {
           </div>
         </div>
 
-        {isLoading && (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
-              >
-                <div className="aspect-[4/3] animate-pulse bg-slate-200" />
-                <div className="space-y-3 p-4">
-                  <div className="h-6 w-24 animate-pulse rounded bg-slate-200" />
-                  <div className="h-5 w-full animate-pulse rounded bg-slate-200" />
-                  <div className="h-4 w-2/3 animate-pulse rounded bg-slate-200" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {isLoading && <LoadingSpinner fullscreen />}
 
         {!isLoading && error && (
           <div
@@ -131,9 +115,7 @@ function Home() {
 
         {!isLoading && !error && listings.length > 0 && (
           <div className="mt-8">
-            <ListingGrid
-              listings={listings}
-            />
+            <ListingGrid listings={listings} />
           </div>
         )}
       </section>

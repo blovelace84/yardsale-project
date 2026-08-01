@@ -6,6 +6,7 @@ import FavoriteButton from "../components/listings/FavoriteButton";
 import { useAuth } from "../context/AuthContext";
 import { getFavoriteListings } from "../services/favoriteService";
 import type { Listing } from "../types/listing";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function Favorites() {
   const { user } = useAuth();
@@ -50,20 +51,7 @@ function Favorites() {
   }
 
   if (isLoading) {
-    return (
-      <section className="mx-auto max-w-7xl px-4 py-10">
-        <div className="flex min-h-[40vh] items-center justify-center">
-          <div className="text-center">
-            <div
-              className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600"
-              aria-hidden="true"
-            />
-
-            <p className="mt-4 text-slate-600">Loading your favorites...</p>
-          </div>
-        </div>
-      </section>
-    );
+    return <LoadingSpinner fullscreen title="Loading your favorites" />;
   }
 
   if (error) {
