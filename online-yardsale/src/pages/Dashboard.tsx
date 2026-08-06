@@ -10,6 +10,7 @@ import {
 } from "../services/listingServices";
 import type { Listing } from "../types/listing";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import EmptyState from "../components/common/EmptyState";
 
 function Dashboard() {
   const { user } = useAuth();
@@ -188,24 +189,12 @@ function Dashboard() {
       )}
 
       {listings.length === 0 ? (
-        <section className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
-          <h2 className="text-xl font-semibold text-slate-900">
-            No listings found
-          </h2>
-
-          <p className="mx-auto mt-2 max-w-lg text-slate-600">
-            No listings were found for the currently signed-in account. Create a
-            new listing while signed in, or confirm that your existing Firestore
-            documents contain the correct sellerId.
-          </p>
-
-          <Link
-            to="/create"
-            className="mt-6 inline-block rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white transition hover:bg-emerald-800"
-          >
-            Create your first listing
-          </Link>
-        </section>
+        <EmptyState
+          title="No listings found"
+          description="No listings were found for the currently signed-in account. Create a new listing while signed in, or confirm that your existing Firestore documents contain the correct sellerId."
+          actionText="Create your first listing"
+          actionTo="/create"
+        />
       ) : (
         <section className="mt-10">
           <div className="flex items-center justify-between gap-4">

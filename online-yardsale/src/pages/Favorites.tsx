@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { getFavoriteListings } from "../services/favoriteService";
 import type { Listing } from "../types/listing";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import EmptyState from "../components/common/EmptyState";
 
 function Favorites() {
   const { user } = useAuth();
@@ -75,27 +76,13 @@ function Favorites() {
       </div>
 
       {listings.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-            <Heart className="h-8 w-8 text-red-500" />
-          </div>
-
-          <h2 className="mt-5 text-xl font-semibold text-slate-900">
-            No favorites yet
-          </h2>
-
-          <p className="mx-auto mt-2 max-w-md text-slate-600">
-            Browse listings and select the heart button to save items you may
-            want to revisit.
-          </p>
-
-          <Link
-            to="/"
-            className="mt-6 inline-flex rounded-lg bg-emerald-600 px-5 py-3 font-medium text-white transition hover:bg-emerald-700"
-          >
-            Browse listings
-          </Link>
-        </div>
+        <EmptyState
+          icon={<Heart className="h-6 w-6 text-red-500" />}
+          title="No favorites yet"
+          description="Browse listings and select the heart button to save items you may want to revisit."
+          actionText="Browse listings"
+          actionTo="/"
+        />
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {listings.map((listing) => (

@@ -11,6 +11,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import EmptyState from "../components/common/EmptyState";
 import ListingGrid from "../components/listings/ListingGrid";
 import { getListingsByCategory } from "../services/listingServices";
 import type { Listing } from "../types/listing";
@@ -232,14 +233,11 @@ function Categories() {
           )}
 
           {!isLoading && !error && listings.length === 0 && (
-            <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
-              <h3 className="text-xl font-bold text-slate-900">
-                No {selectedCategory.toLowerCase()} listings yet
-              </h3>
-
-              <p className="mt-2 text-slate-600">
-                Check another category or return later for new listings.
-              </p>
+            <div className="mt-8">
+              <EmptyState
+                title={`No ${selectedCategory.toLowerCase()} listings yet`}
+                description="Check another category or return later for new listings."
+              />
             </div>
           )}
 
