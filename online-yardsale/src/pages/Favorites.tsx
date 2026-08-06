@@ -8,6 +8,7 @@ import { getFavoriteListings } from "../services/favoriteService";
 import type { Listing } from "../types/listing";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import EmptyState from "../components/common/EmptyState";
+import ErrorMessage from "../components/common/ErrorMessage";
 
 function Favorites() {
   const { user } = useAuth();
@@ -58,9 +59,7 @@ function Favorites() {
   if (error) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-10">
-        <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
-          <p className="text-red-700">{error}</p>
-        </div>
+        <ErrorMessage title="Couldn't load your favorites" message={error} />
       </section>
     );
   }
